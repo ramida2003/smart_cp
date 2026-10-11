@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171817">
+  <meta name="description" content="A university engineering prototype connecting parking sensors, gate control and browser-based visibility.">
+  <title>Smart Car Park — Engineering case study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23171817'/%3E%3Ctext x='16' y='21.5' text-anchor='middle' font-family='Arial' font-size='12' font-weight='700' fill='%23dc9168'%3ESC%3C/text%3E%3C/svg%3E">
+  <style>
+    :root{color-scheme:dark;--bg:#171817;--bg2:#1c1e1c;--panel:#222421;--panel2:#292b28;--ink:#f1eee7;--muted:#aaa89f;--dim:#777970;--rule:rgba(234,230,218,.12);--copper:#dc9168;--copper2:#f2b28b;--ice:#a9c9d4;--green:#9abd8d;--amber:#d8aa65;--red:#dc806e;--radius:18px;--sm:10px;--max:1160px;--sans:'Outfit',sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:86px}body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}button:focus-visible,a:focus-visible{outline:2px solid var(--ice);outline-offset:4px}::selection{background:rgba(220,145,104,.32);color:#fff}.wrap{width:min(var(--max),calc(100% - 48px));margin-inline:auto}.eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;font-weight:700;color:var(--copper2)}.muted{color:var(--muted)}.fine{font-size:.8rem;color:var(--dim)}.section{padding:112px 0;border-top:1px solid var(--rule)}.section-head{display:grid;grid-template-columns:.72fr 1.28fr;gap:42px;align-items:end;margin-bottom:50px}.section-head h2{font-size:clamp(2.1rem,4.2vw,4.2rem);line-height:1.03;letter-spacing:-.055em;font-weight:500;margin:12px 0 0;max-width:15ch}.section-head p{color:var(--muted);max-width:54ch;margin:0 0 4px}.pill{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--rule);border-radius:999px;padding:10px 16px;color:var(--muted);font-size:.78rem;letter-spacing:.015em}.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--copper)}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:47px;padding:0 20px;border:1px solid transparent;border-radius:999px;font-size:.88rem;font-weight:600;transition:transform .2s,background .2s,border-color .2s;cursor:pointer}.btn:hover:not(:disabled){transform:translateY(-2px)}.btn-main{background:var(--copper);color:#1b1714}.btn-main:hover:not(:disabled){background:var(--copper2)}.btn-line{border-color:rgba(241,238,231,.26);background:transparent;color:var(--ink)}.btn-line:hover:not(:disabled){border-color:var(--copper);background:rgba(220,145,104,.08)}.btn:disabled{opacity:.42;cursor:not-allowed}.topbar{position:sticky;top:0;z-index:20;background:rgba(23,24,23,.88);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:border-color .25s}.topbar.scrolled{border-color:var(--rule)}.nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:11px;font-weight:600;font-size:.9rem;letter-spacing:-.02em}.brand-mark{width:29px;height:29px;border:1px solid rgba(220,145,104,.6);border-radius:9px;display:grid;place-items:center;color:var(--copper);font-size:.75rem}.navlinks{display:flex;align-items:center;gap:24px;color:var(--muted);font-size:.82rem}.navlinks a:hover{color:var(--ink)}.nav-back{border:1px solid var(--rule);border-radius:999px;padding:8px 13px;font-size:.78rem;color:var(--muted)}.nav-back:hover{border-color:var(--copper);color:var(--ink)}.menu-toggle{display:none;background:none;border:1px solid var(--rule);border-radius:99px;padding:8px 13px}
+    .hero{padding:90px 0 64px;min-height:calc(100svh - 68px);display:flex;align-items:center}.hero-grid{display:grid;grid-template-columns:.83fr 1.17fr;align-items:center;gap:46px}.hero-copy{padding:8px 0 18px}.hero h1{font-size:clamp(3.8rem,8vw,7.2rem);line-height:.91;letter-spacing:-.075em;font-weight:500;margin:22px 0 24px}.hero h1 span{display:block;color:var(--copper)}.hero-copy>p{max-width:48ch;color:var(--muted);font-size:1.08rem;margin:0 0 29px}.hero-actions{display:flex;flex-wrap:wrap;gap:10px}.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.hero-scene{position:relative;min-width:0}.scene-shell{background:linear-gradient(140deg,#282a27,#1f211f 72%);border:1px solid rgba(235,225,206,.14);border-radius:var(--radius);padding:15px;box-shadow:0 30px 80px rgba(0,0,0,.27);overflow:hidden}.scene-top{display:flex;justify-content:space-between;align-items:center;padding:3px 4px 12px}.scene-label{font-size:.72rem;color:var(--muted);display:flex;align-items:center;gap:8px}.scene-label:before{content:"";width:7px;height:7px;background:var(--copper);border-radius:50%}.scene-controls{display:flex;gap:7px}.icon-btn{width:32px;height:32px;border:1px solid var(--rule);border-radius:50%;background:rgba(255,255,255,.035);cursor:pointer;font-size:.85rem}.icon-btn:hover{border-color:var(--copper)}#heroScene,#mainScene{display:block;width:100%;height:390px;border-radius:12px;background:#282c29}.scene-status{display:flex;justify-content:space-between;gap:12px;padding:13px 5px 1px;color:var(--muted);font-size:.79rem}.scene-status strong{color:var(--ink);font-weight:500}.hero-caption{position:absolute;bottom:-24px;right:15px;color:var(--dim);font-size:.68rem}
+    .intro-strip{padding:0 0 72px}.strip-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}.strip-item{padding:23px 28px 23px 0}.strip-item+.strip-item{border-left:1px solid var(--rule);padding-left:28px}.strip-item strong{display:block;font-size:1.6rem;letter-spacing:-.04em;font-weight:500}.strip-item span{font-size:.8rem;color:var(--muted)}
+    .problem-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}.problem-copy h3{font-size:clamp(1.9rem,3vw,3rem);font-weight:500;line-height:1.12;letter-spacing:-.05em;margin:0 0 20px}.problem-copy p{max-width:56ch;color:var(--muted)}.problem-visual{min-height:340px;border:1px solid var(--rule);border-radius:var(--radius);background:linear-gradient(145deg,#222522,#1d1f1d);position:relative;overflow:hidden;padding:30px;display:flex;flex-direction:column;justify-content:space-between}.problem-visual:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 37px,rgba(255,255,255,.035) 38px),repeating-linear-gradient(90deg,transparent 0 37px,rgba(255,255,255,.035) 38px);mask-image:linear-gradient(135deg,#000,transparent 82%);pointer-events:none}.problem-visual>*{z-index:1}.problem-visual .big-word{font-size:clamp(3rem,7vw,6.6rem);letter-spacing:-.08em;line-height:.9;font-weight:500;color:#e7dfd1}.problem-flow{display:flex;align-items:center;gap:10px;font-size:.76rem;color:var(--muted);flex-wrap:wrap}.problem-flow b{color:var(--copper);font-weight:500}
+    .prototype-layout{display:grid;grid-template-columns:1.18fr .82fr;gap:22px}.media-placeholder{border:1px solid var(--rule);border-radius:var(--radius);background:linear-gradient(145deg,#282a27,#202220);min-height:250px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}.media-placeholder:before{content:"";position:absolute;width:70%;height:70%;border:1px solid rgba(220,145,104,.13);border-radius:50%;transform:rotate(-24deg) scaleY(.48)}.media-placeholder:after{content:"";position:absolute;inset:16px;border:1px dashed rgba(235,225,206,.11);border-radius:12px;pointer-events:none}.media-content{position:relative;z-index:1;max-width:30ch}.placeholder-symbol{width:42px;height:42px;border:1px solid rgba(220,145,104,.45);border-radius:13px;margin:0 auto 14px;display:grid;place-items:center;color:var(--copper);font-size:1.1rem}.media-content strong{display:block;font-size:1.05rem;font-weight:500}.media-content p{font-size:.78rem;color:var(--muted);margin:5px 0 10px}.tag{display:inline-block;border:1px solid var(--rule);border-radius:99px;padding:4px 9px;font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}.prototype-side{display:grid;grid-template-rows:1fr 1fr;gap:22px}.prototype-side .media-placeholder{min-height:0}.component-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}.component{padding:18px 16px;border-top:1px solid var(--rule)}.component .num{color:var(--copper);font-size:.7rem;letter-spacing:.12em}.component strong{display:block;font-weight:500;margin:5px 0}.component span{font-size:.78rem;color:var(--muted)}
+    .sim-section{background:#1b1d1b}.sim-top{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:29px}.sim-top .section-head{margin:0;display:block}.sim-top .section-head h2{max-width:14ch}.sim-tag{flex:none}.sim-grid{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px}.sim-stage{border:1px solid var(--rule);border-radius:var(--radius);padding:14px;background:#242724;min-width:0}.sim-stage #mainScene{height:490px}.sim-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 4px 0}.sim-legend{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:.72rem}.legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:var(--green)}.legend-dot.busy{background:var(--amber)}.legend-dot.sensor{background:var(--ice)}.sim-side{display:flex;flex-direction:column;gap:12px}.side-card{border:1px solid var(--rule);border-radius:var(--radius);background:#222421;padding:19px}.occupancy-number{font-size:3rem;line-height:1;letter-spacing:-.07em;font-weight:500;margin:6px 0}.occupancy-number small{font-size:1rem;color:var(--muted);letter-spacing:0;font-weight:400}.occupancy-track{height:5px;border-radius:5px;background:#41433f;margin:14px 0 7px;overflow:hidden}.occupancy-track span{display:block;height:100%;background:var(--copper);width:0;transition:width .6s cubic-bezier(.2,.8,.2,1)}.bay-states{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.bay-state{border:1px solid var(--rule);border-radius:9px;padding:9px 5px;text-align:center;font-size:.7rem;color:var(--muted)}.bay-state i{display:block;width:7px;height:7px;border-radius:50%;background:var(--green);margin:0 auto 5px}.bay-state.occupied i{background:var(--amber)}.gate-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--rule);font-size:.75rem}.gate-row:last-child{border-bottom:0}.gate-state{color:var(--green)}.gate-state.closed{color:var(--muted)}.scenario-card{flex:1}.scenario-card h3{font-size:.95rem;font-weight:500;margin:0 0 12px}.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.scenario-btn{min-height:36px;text-align:left;border:1px solid var(--rule);border-radius:9px;background:rgba(255,255,255,.025);padding:7px 9px;font-size:.69rem;color:var(--muted);cursor:pointer;transition:border-color .2s,color .2s,background .2s}.scenario-btn:hover:not(:disabled),.scenario-btn[aria-pressed="true"]{border-color:rgba(220,145,104,.6);color:var(--ink);background:rgba(220,145,104,.08)}.scenario-btn:disabled{opacity:.38;cursor:not-allowed}.scenario-grid .wide{grid-column:span 2}.caption{font-size:.78rem;color:var(--muted);line-height:1.55;min-height:3.1em;margin:13px 0 0}.sim-caution{font-size:.67rem;color:var(--dim);margin:11px 0 0}
+    .architecture{display:grid;grid-template-columns:1fr;gap:24px}.arch-diagram{border:1px solid var(--rule);border-radius:var(--radius);background:#202220;padding:32px 28px;overflow:hidden}.arch-flow{display:flex;align-items:center;justify-content:space-between;gap:7px;position:relative}.arch-node{position:relative;z-index:1;flex:1;min-width:95px;text-align:center;padding:15px 8px;border:1px solid rgba(235,225,206,.14);border-radius:12px;background:#272a27}.arch-node .node-icon{font-size:.7rem;color:var(--copper);letter-spacing:.1em;text-transform:uppercase}.arch-node strong{display:block;font-size:.9rem;font-weight:500;margin-top:5px}.arch-node span{font-size:.66rem;color:var(--muted)}.arch-link{height:1px;flex:.38;min-width:12px;background:rgba(220,145,104,.28);position:relative;overflow:hidden}.arch-link:after{content:"";position:absolute;left:-35%;top:-2px;width:10px;height:5px;border-radius:5px;background:var(--copper2);box-shadow:0 0 9px rgba(220,145,104,.5);animation:travel 2.8s ease-in-out infinite}.arch-link:nth-of-type(4):after{animation-delay:.3s}.arch-link:nth-of-type(6):after{animation-delay:.6s}.arch-link:nth-of-type(8):after{animation-delay:.9s}.arch-link:nth-of-type(10):after{animation-delay:1.2s}@keyframes travel{0%{transform:translateX(0);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(145px);opacity:0}}.arch-caption{display:flex;justify-content:space-between;margin-top:18px;color:var(--dim);font-size:.71rem}.arch-caption strong{color:var(--ice);font-weight:500}.arch-details{display:grid;grid-template-columns:repeat(3,1fr);gap:0 28px}.arch-detail{padding:18px 0;border-top:1px solid var(--rule)}.arch-detail strong{display:block;font-weight:500;font-size:.92rem}.arch-detail p{font-size:.78rem;color:var(--muted);margin:5px 0 0;max-width:34ch}
+    .dashboard-layout{display:grid;grid-template-columns:1fr .9fr;gap:18px}.dash-card,.chart-card{border:1px solid var(--rule);border-radius:var(--radius);background:#222421;padding:22px}.dash-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.dash-head strong{font-weight:500}.status-pill{border:1px solid rgba(216,170,101,.34);border-radius:999px;padding:5px 9px;font-size:.67rem;color:var(--amber)}.dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}.dash-stat{padding:12px;border-radius:10px;background:#292b28}.dash-stat span{display:block;color:var(--muted);font-size:.67rem}.dash-stat strong{font-size:1.3rem;font-weight:500}.dashboard-bays{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.dashboard-bay{border:1px solid var(--rule);border-radius:10px;padding:12px;min-height:86px}.dashboard-bay strong{display:block;font-size:.76rem;font-weight:500}.dashboard-bay span{color:var(--green);font-size:.68rem}.dashboard-bay.is-full span{color:var(--amber)}.activity-lines{border-top:1px solid var(--rule);margin-top:17px;padding-top:12px;display:grid;gap:7px;font-size:.69rem;color:var(--muted)}.activity-lines span{display:flex;justify-content:space-between}.chart-title{display:flex;justify-content:space-between;align-items:start}.chart-title strong{font-weight:500}.chart-title span{font-size:.67rem;color:var(--amber);border:1px solid rgba(216,170,101,.28);border-radius:99px;padding:4px 7px}.chart-wrap{height:210px;margin-top:14px;position:relative}.chart-wrap canvas{width:100%;height:100%;display:block}.chart-foot{display:flex;justify-content:space-between;color:var(--dim);font-size:.66rem;margin-top:5px}.data-note{font-size:.75rem;color:var(--muted);margin:15px 0 0}
+    .evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.evidence-card{border:1px solid var(--rule);border-radius:var(--radius);padding:24px;background:#222421}.evidence-card h3{font-size:1.05rem;font-weight:500;margin:0 0 16px;display:flex;align-items:center;gap:9px}.evidence-card h3:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green)}.evidence-card.pending h3:before{background:var(--amber)}.evidence-list{list-style:none;margin:0;padding:0;display:grid;gap:11px}.evidence-list li{padding-left:19px;position:relative;font-size:.81rem;color:var(--muted)}.evidence-list li:before{content:"";position:absolute;left:0;top:.68em;width:6px;height:6px;border:1px solid var(--green);border-radius:50%}.pending .evidence-list li:before{border-color:var(--amber)}.lesson-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:25px}.lesson{border-top:1px solid var(--rule);padding-top:14px}.lesson .num{font-size:.7rem;color:var(--copper)}.lesson strong{display:block;font-weight:500;margin:4px 0}.lesson p{font-size:.76rem;color:var(--muted);margin:0}
+    .media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.media-card{border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden;background:#222421}.media-card .media-placeholder{min-height:175px;border:0;border-radius:0}.media-card .media-placeholder:after{inset:11px}.media-card .media-content strong{font-size:.9rem}.media-card .media-content p{font-size:.7rem}.media-info{padding:15px 16px 17px}.media-info strong{font-size:.88rem;font-weight:500}.media-info p{font-size:.73rem;color:var(--muted);margin:4px 0 0}.video-placeholder{cursor:default}.media-placeholder.real-media{cursor:pointer}.media-placeholder.real-media:hover{border-color:rgba(220,145,104,.5)}.play-glyph{width:41px;height:41px;border-radius:50%;border:1px solid rgba(220,145,104,.65);display:grid;place-items:center;margin:0 auto 11px;color:var(--copper2);padding-left:3px}.resources{margin-top:52px}.resource-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:17px}.resource-head h3{font-size:1.55rem;font-weight:500;letter-spacing:-.04em;margin:0}.resource-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.resource{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 16px;border:1px solid var(--rule);border-radius:11px;background:rgba(255,255,255,.018)}.resource-name{display:flex;align-items:center;gap:12px;min-width:0}.filetype{flex:none;width:39px;height:39px;border-radius:10px;background:rgba(220,145,104,.09);color:var(--copper2);display:grid;place-items:center;font-size:.58rem;font-weight:700;letter-spacing:.04em}.resource strong{display:block;font-size:.82rem;font-weight:500}.resource small{display:block;color:var(--dim);font-size:.68rem}.resource button{border:1px solid var(--rule);border-radius:99px;background:transparent;padding:6px 10px;font-size:.66rem;color:var(--dim);white-space:nowrap;cursor:not-allowed}.resource button:disabled{opacity:.7}.closing{padding:85px 0 94px;border-top:1px solid var(--rule)}.closing-box{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;border-radius:var(--radius);padding:44px;background:linear-gradient(120deg,#282a27,#202220);border:1px solid var(--rule)}.closing h2{font-size:clamp(2.1rem,4.5vw,4.4rem);line-height:1;letter-spacing:-.06em;font-weight:500;margin:11px 0 16px}.closing p{max-width:58ch;color:var(--muted);margin:0}.closing-actions{display:flex;gap:9px;flex-wrap:wrap}.footer{padding:20px 0 30px;color:var(--dim);font-size:.72rem;border-top:1px solid var(--rule)}.footer-inner{display:flex;justify-content:space-between;gap:20px}
+    .modal{position:fixed;inset:0;z-index:80;background:rgba(8,9,8,.84);display:none;align-items:center;justify-content:center;padding:24px}.modal.open{display:flex}.modal-panel{width:min(900px,100%);background:#1e201e;border:1px solid var(--rule);border-radius:var(--radius);padding:16px;position:relative}.modal-panel video,.modal-panel iframe{display:block;width:100%;max-height:75vh;aspect-ratio:16/9;background:#111;border-radius:10px}.modal-close{position:absolute;right:12px;top:-45px;border:1px solid var(--rule);border-radius:99px;background:#222421;padding:8px 13px;cursor:pointer}.modal-title{font-size:.83rem;color:var(--muted);padding:11px 2px 1px}.reveal{opacity:0;transform:translateY(16px);transition:opacity .65s ease,transform .65s cubic-bezier(.16,1,.3,1)}.reveal.in-view{opacity:1;transform:translateY(0)}.reveal-delay{transition-delay:.12s}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:980px){.hero-grid{grid-template-columns:1fr;gap:32px}.hero-copy{max-width:730px}.hero{padding-top:72px}.hero-scene{max-width:780px;width:100%;margin:auto}.problem-grid{gap:35px}.sim-grid{grid-template-columns:1fr}.sim-side{display:grid;grid-template-columns:repeat(2,1fr)}.scenario-card{grid-row:span 2}.arch-flow{flex-wrap:wrap;justify-content:center}.arch-node{flex:none;width:calc(33.333% - 25px)}.arch-link{flex:none;width:20px}.arch-link:nth-of-type(6){display:none}.prototype-layout{grid-template-columns:1fr}.prototype-side{grid-template-columns:1fr 1fr;grid-template-rows:1fr}.prototype-side .media-placeholder{min-height:220px}}
+    @media(max-width:680px){.wrap{width:min(100% - 32px,var(--max))}.section{padding:78px 0}.nav{height:60px}.navlinks{display:none}.menu-toggle{display:block}.nav-back{padding:7px 10px;font-size:.71rem}.hero{padding:57px 0 45px;min-height:auto}.hero h1{font-size:clamp(3.5rem,16vw,5.6rem)}.hero-copy>p{font-size:.98rem}.scene-shell{padding:9px}.scene-top{padding:3px 3px 10px}#heroScene{height:285px}.hero-caption{position:static;text-align:right;display:block;margin-top:9px}.strip-grid{grid-template-columns:1fr}.strip-item,.strip-item+.strip-item{padding:15px 0;border-left:0}.strip-item+.strip-item{border-top:1px solid var(--rule)}.strip-item strong{font-size:1.35rem}.section-head{grid-template-columns:1fr;gap:14px;margin-bottom:30px}.section-head h2{font-size:2.8rem}.problem-grid{grid-template-columns:1fr;gap:24px}.problem-visual{min-height:270px}.component-list{grid-template-columns:1fr 1fr}.component-list .component:last-child{grid-column:span 2}.prototype-side{gap:12px}.prototype-side .media-placeholder{min-height:175px}.sim-top{display:block}.sim-tag{margin-top:18px}.sim-stage{padding:8px}.sim-stage #mainScene{height:330px}.sim-meta{align-items:flex-start;flex-direction:column}.sim-side{grid-template-columns:1fr 1fr;gap:8px}.side-card{padding:15px}.scenario-card{grid-column:span 2;grid-row:auto}.scenario-grid{grid-template-columns:1fr 1fr}.arch-diagram{padding:20px 12px}.arch-node{width:calc(50% - 18px);min-width:120px}.arch-link{width:16px}.arch-link:nth-of-type(4),.arch-link:nth-of-type(8){display:none}.arch-caption{display:block}.arch-caption span{display:block;margin-top:5px}.arch-details{grid-template-columns:1fr 1fr;gap:0 18px}.dashboard-layout{grid-template-columns:1fr}.dash-card,.chart-card{padding:17px}.chart-wrap{height:195px}.evidence-grid{grid-template-columns:1fr}.lesson-row{grid-template-columns:1fr;gap:9px}.lesson{padding-top:11px}.media-grid{grid-template-columns:1fr 1fr;gap:9px}.media-card .media-placeholder{min-height:140px;padding:12px}.media-card .placeholder-symbol{margin-bottom:8px}.media-card .media-content p{font-size:.64rem}.media-info{padding:12px}.media-info strong{font-size:.78rem}.media-info p{font-size:.67rem}.resource-head{display:block}.resource-head .fine{margin-top:5px}.resource-grid{grid-template-columns:1fr}.closing{padding:62px 0}.closing-box{grid-template-columns:1fr;padding:26px 20px;gap:23px}.closing h2{font-size:2.7rem}.footer-inner{display:block}.footer-inner span{display:block;margin-top:7px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.reveal{opacity:1;transform:none}}
+  </style>
+  <style>
+    .scene-viewport{position:relative}
+    .scene-hotspot{position:absolute;z-index:3;display:grid;place-items:center;width:26px;height:26px;padding:0;border:1px solid rgba(242,178,139,.75);border-radius:50%;background:rgba(23,24,23,.92);color:var(--copper2);font-size:.61rem;font-weight:700;cursor:pointer;transform:translate(-50%,-50%);box-shadow:0 2px 10px rgba(0,0,0,.35);transition:background .18s,color .18s,transform .18s}
+    .scene-hotspot:hover,.scene-hotspot[aria-pressed="true"]{background:var(--copper);color:#171817;transform:translate(-50%,-50%) scale(1.08)}
+    .scene-hotspot.bays{left:50%;top:34%}.scene-hotspot.entry{left:22%;top:73%}.scene-hotspot.exit{left:78%;top:73%}
+    .hotspot-detail{min-height:2.7em;margin:7px 4px 0;color:var(--muted);font-size:.69rem;line-height:1.4}
+    .contribution-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;align-items:stretch}
+    .contribution-intro,.contribution-visual,.contribution-area{border:1px solid var(--rule);border-radius:var(--radius);background:linear-gradient(145deg,#252724,#202220)}
+    .contribution-intro,.contribution-visual{padding:clamp(22px,3vw,36px)}
+    .contribution-intro h2{font-size:clamp(2.2rem,4vw,3.8rem);line-height:1;letter-spacing:-.055em;font-weight:500;margin:13px 0}
+    .contribution-subtitle{color:var(--copper2);font-size:1rem;margin:0 0 20px}
+    .contribution-intro>p:last-of-type{color:var(--muted);max-width:52ch;margin:0}
+    .contribution-role{display:flex;flex-wrap:wrap;gap:8px;margin-top:25px}
+    .contribution-role span{border:1px solid rgba(220,145,104,.26);border-radius:999px;padding:7px 11px;color:var(--copper2);font-size:.68rem}
+    .contribution-visual{display:flex;flex-direction:column;justify-content:center;min-width:0}
+    .contribution-visual>p{font-size:.78rem;color:var(--muted);margin:8px 0 20px}
+    .signal-flow{list-style:none;margin:0;padding:0;display:flex;align-items:stretch;gap:7px}
+    .flow-node{flex:1;min-width:0;border:1px solid rgba(220,145,104,.34);border-radius:12px;background:rgba(220,145,104,.055);padding:13px 10px;display:flex;flex-direction:column;justify-content:center;min-height:108px}
+    .flow-node.additional{border-color:rgba(169,201,212,.34);background:rgba(169,201,212,.045)}
+    .flow-node strong{font-size:.78rem;line-height:1.2;font-weight:600;margin:7px 0}
+    .flow-node small{color:var(--copper2);font-size:.57rem;line-height:1.35;text-transform:uppercase;letter-spacing:.08em}
+    .flow-node.additional small{color:var(--ice)}
+    .flow-link{flex:0 0 15px;align-self:center;position:relative;color:var(--dim);font-size:.8rem;text-align:center}
+    .flow-link i{position:absolute;left:0;top:50%;width:4px;height:4px;border-radius:50%;background:var(--copper2);animation:signalTravel 2.4s ease-in-out infinite}
+    .flow-link:nth-child(4) i{animation-delay:.35s}.flow-link:nth-child(6) i{animation-delay:.7s}.flow-link:nth-child(8) i{animation-delay:1.05s}
+    @keyframes signalTravel{0%{transform:translate(0,-50%);opacity:0}18%{opacity:1}82%{opacity:1}100%{transform:translate(12px,-50%);opacity:0}}
+    .contribution-areas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+    .contribution-area{padding:22px;position:relative;overflow:hidden}
+    .contribution-area:before{content:attr(data-number);position:absolute;right:16px;top:5px;color:rgba(220,145,104,.16);font-size:2.6rem;font-weight:500;letter-spacing:-.08em}
+    .contribution-area h3{font-size:1rem;font-weight:500;margin:0 0 9px;position:relative}
+    .contribution-area p{font-size:.79rem;color:var(--muted);margin:0;position:relative}
+    .capacity-warning{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:10px 13px;border:1px solid rgba(220,128,110,.36);border-radius:10px;background:rgba(220,128,110,.07);color:#f0b0a5;font-size:.77rem;animation:capacityPulse 2.3s ease-in-out infinite}
+    .capacity-warning[hidden]{display:none}
+    .capacity-warning i{width:8px;height:8px;flex:none;border-radius:50%;background:var(--red);box-shadow:0 0 10px rgba(220,128,110,.65)}
+    @keyframes capacityPulse{0%,100%{border-color:rgba(220,128,110,.25);box-shadow:0 0 0 rgba(220,128,110,0)}50%{border-color:rgba(220,128,110,.58);box-shadow:0 0 16px rgba(220,128,110,.1)}}
+    .capacity-warning.uncertain{border-color:rgba(216,170,101,.35);background:rgba(216,170,101,.055);color:var(--amber);animation:none}
+    .capacity-warning.uncertain i{background:var(--amber);box-shadow:none}
+    .bay-state.occupied i{background:var(--red)}
+    .bay-state.unknown{border-color:rgba(216,170,101,.42);color:var(--amber)}
+    .bay-state.unknown i{background:var(--amber)}
+    .legend-dot.unknown{background:var(--amber)}
+    .legend-dot.busy{background:var(--red)}
+    .dashboard-bay.is-full span{color:var(--red)}
+    .dashboard-bay.is-unknown span{color:var(--amber)}
+    .sensor-unknown-note{margin:12px 0 0;padding:9px 11px;border-left:2px solid var(--amber);background:rgba(216,170,101,.06);color:var(--amber);font-size:.72rem}
+    .sensor-unknown-note[hidden]{display:none}
+    @media(max-width:980px){.contribution-layout{grid-template-columns:1fr}.signal-flow{display:grid;grid-template-columns:1fr;gap:6px}.flow-node{min-height:74px}.flow-link{transform:rotate(90deg);justify-self:center;height:16px}.flow-link i{display:none}}
+    @media(max-width:680px){.contribution-areas{grid-template-columns:1fr}.contribution-area{padding:19px}.capacity-warning{font-size:.71rem}}
+  </style>
+</head>
+<body>
+  <!-- ASSET MAP: place supplied media in ./assets/ and update these paths only. Keep null until real files exist. -->
+  <script>
+    window.PROJECT_ASSETS = {
+      portfolioUrl: "../../index.html#projects",
+      images: { prototype: null, wiring: null, layout: null, gates: null, dashboard: null, cad: null },
+      videos: { complete: null, denied: null, journey: null },
+      downloads: { freecad: null, step: null, stl: null, arduino: null, sql: null, php: null, python: null, dashboard: null, report: null, tests: null },
+      // Browsers do not render native .FCStd directly. Offer it as a future download;
+      // use an exported GLB/glTF to replace the procedural scene with an accurate CAD preview.
+      model3d: null
+    };
+  </script>
+  <header class="topbar" id="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Smart Car Park, back to top"><span class="brand-mark">SC</span> Engineering case study</a>
+      <nav class="navlinks" aria-label="Page chapters">
+        <a href="#prototype">Prototype</a><a href="#simulation">Simulation</a><a href="#data">Data journey</a><a href="#contribution">My contribution</a><a href="#evidence">Evidence</a>
+      </nav>
+      <a class="nav-back" id="backLink" href="../../index.html#projects">← Back to portfolio</a>
+      <button class="menu-toggle" type="button" aria-label="Jump to chapters" onclick="document.querySelector('#prototype').scrollIntoView({behavior:'smooth'})">Explore ↓</button>
+    </div>
+  </header>
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Engineering project / Smart automation</div>
+          <h1>Smart <span>Car Park</span></h1>
+          <p>A small physical parking model with a complete data journey: ultrasonic sensing informs gate decisions, while a browser dashboard makes bay state visible.</p>
+          <div class="hero-actions"><a class="btn btn-main" href="#simulation">Explore the prototype <span aria-hidden="true">↘</span></a><a class="btn btn-line" href="#media">Watch the demonstration <span aria-hidden="true">↗</span></a></div>
+          <div class="facts"><span class="pill"><i class="dot"></i>3 parking bays</span><span class="pill"><i class="dot"></i>Arduino UNO</span><span class="pill"><i class="dot"></i>Python · PHP · MySQL</span></div>
+        </div>
+        <div class="hero-scene">
+          <div class="scene-shell">
+            <div class="scene-top"><span class="scene-label">Interactive simulation · not live hardware</span><div class="scene-controls"><button class="icon-btn" id="heroPause" type="button" aria-label="Pause scene motion" title="Pause motion">Ⅱ</button><button class="icon-btn" id="heroReset" type="button" aria-label="Reset simulation" title="Reset simulation">↺</button></div></div>
+            <div class="scene-viewport">
+              <canvas id="heroScene" aria-label="Interactive three-bay parking simulation" role="img"></canvas>
+              <button class="scene-hotspot bays" type="button" data-hotspot="bays" aria-label="Hotspot 1: bay sensors and status lights" aria-pressed="true">01</button>
+              <button class="scene-hotspot entry" type="button" data-hotspot="entry" aria-label="Hotspot 2: entrance sensor and barrier" aria-pressed="false">02</button>
+              <button class="scene-hotspot exit" type="button" data-hotspot="exit" aria-label="Hotspot 3: independent exit sensor and barrier" aria-pressed="false">03</button>
+            </div>
+            <p class="hotspot-detail" id="hotspotDetail" aria-live="polite">01 · Bay sensing — three ultrasonic sensors track the bays; two LEDs per bay show status.</p>
+            <div class="scene-status"><span><strong id="heroCount">0 / 3 occupied</strong> · <span id="heroPercent">0%</span> capacity</span><span id="heroGate">Entry gate closed</span></div>
+          </div>
+          <span class="hero-caption">Procedural model · illustrative, not a photograph</span>
+        </div>
+      </div>
+    </section>
+    <div class="wrap intro-strip">
+      <div class="strip-grid"><div class="strip-item"><strong>Sense</strong><span>Five HC-SR04 sensors: three bays, entry and exit</span></div><div class="strip-item"><strong>Decide</strong><span>Admission stops at capacity; departure stays independent</span></div><div class="strip-item"><strong>Surface</strong><span>USB serial to a browser-facing data path</span></div></div>
+    </div>
+    <section class="section" id="problem">
+      <div class="wrap problem-grid reveal">
+        <div class="problem-copy"><span class="eyebrow">01 / The problem</span><h3>A parking count only helps when it changes what happens next.</h3><p>We wanted the model to do more than detect a car. It needed to show which bays were free, prevent a new arrival when all three were occupied, and still let a parked vehicle leave. A browser view then connected those physical events to a readable current state.</p><p class="fine">A university team prototype — an exploration of sensing and feedback, not a commercial installation.</p></div>
+        <div class="problem-visual"><span class="eyebrow">The control question</span><div class="big-word">Space<br>before<br>access.</div><div class="problem-flow"><span>Detect occupancy</span><b>→</b><span>Check capacity</span><b>→</b><span>Open or hold</span></div></div>
+      </div>
+    </section>
+    <section class="section" id="prototype">
+      <div class="wrap">
+        <div class="section-head reveal"><div><span class="eyebrow">02 / From concept to prototype</span><h2>Physical cues,<br>one model.</h2></div><p>Three marked spaces sit between an entry and an exit. Sensors report occupancy; LEDs make each bay legible at a glance; two servo gates separate arrival from departure.</p></div>
+        <div class="prototype-layout reveal">
+          <div class="media-placeholder" data-asset="prototype"><div class="media-content"><div class="placeholder-symbol">01</div><strong>Complete prototype</strong><p>Place a clear photograph of the assembled parking model here.</p><span class="tag">Photo · pending asset</span></div></div>
+          <div class="prototype-side"><div class="media-placeholder" data-asset="layout"><div class="media-content"><div class="placeholder-symbol">02</div><strong>Top-down layout</strong><p>Three bays, approach lane and independent exit.</p><span class="tag">Model view · pending</span></div></div><div class="media-placeholder" data-asset="wiring"><div class="media-content"><div class="placeholder-symbol">03</div><strong>Sensors &amp; wiring</strong><p>UNO, five ultrasonic sensors and six status LEDs.</p><span class="tag">Circuit photo · pending</span></div></div></div>
+        </div>
+        <div class="component-list reveal">
+          <div class="component"><span class="num">01 / CONTROL</span><strong>Arduino UNO</strong><span>Final controller for the sensing and gate logic.</span></div>
+          <div class="component"><span class="num">02 / DETECTION</span><strong>5 × HC-SR04</strong><span>One sensor per bay, plus entrance and exit sensing.</span></div>
+          <div class="component"><span class="num">03 / FEEDBACK</span><strong>6 LEDs · 2 servos</strong><span>Bay status indicators and independently controlled barriers.</span></div>
+        </div>
+      </div>
+    </section>
+    <section class="section sim-section" id="simulation">
+      <div class="wrap">
+        <div class="sim-top reveal"><div class="section-head"><div><span class="eyebrow">03 / Follow a vehicle</span><h2>Capacity is a rule.<br>Departure is a right.</h2></div><p>Try a scenario. Watch a car approach, pass a barrier, turn into a bay—or stop safely at the entrance when there is no space.</p></div><span class="pill sim-tag"><i class="dot"></i>Illustrative simulation</span></div>
+        <div class="sim-grid reveal">
+          <div class="sim-stage"><div class="capacity-warning" id="capacityWarning" role="status" aria-live="polite" hidden><i aria-hidden="true"></i><span>Parking full · Entry stays closed · Exit remains available</span></div><canvas id="mainScene" aria-label="Interactive parking model with three bays, two gates and moving cars" role="img"></canvas><div class="sim-meta"><div class="sim-legend"><span><i class="legend-dot"></i>Available</span><span><i class="legend-dot busy"></i>Occupied</span><span><i class="legend-dot unknown"></i>Unknown, not available</span><span><i class="legend-dot sensor"></i>Sensor position</span></div><span class="fine">Front = gate edge · left/right from outside · drag to orbit</span></div></div>
+          <aside class="sim-side" aria-label="Simulation controls and status">
+            <div class="side-card"><span class="eyebrow">Current occupancy</span><div class="occupancy-number"><span id="count">0</span><small> / 3</small></div><div class="occupancy-track"><span id="occupancyFill"></span></div><div class="fine"><span id="percentage">0</span>% of capacity confirmed occupied</div><p class="sensor-unknown-note" id="unknownNote" aria-live="polite" hidden></p></div>
+            <div class="side-card"><span class="eyebrow">Bay indicators</span><div class="bay-states" id="bayStates"><div class="bay-state"><i></i>Bay 1<br>Free</div><div class="bay-state"><i></i>Bay 2<br>Free</div><div class="bay-state"><i></i>Bay 3<br>Free</div></div></div>
+            <div class="side-card"><span class="eyebrow">Gate state</span><div class="gate-row"><span>Entry</span><strong class="gate-state closed" id="entryState">Closed</strong></div><div class="gate-row"><span>Exit</span><strong class="gate-state closed" id="exitState">Closed</strong></div></div>
+            <div class="side-card scenario-card"><h3>Choose a scenario</h3><div class="scenario-grid" id="scenarioControls">
+              <button class="scenario-btn" data-action="empty">Empty parking</button><button class="scenario-btn" data-action="bay" data-bay="0">Park in Bay 1</button><button class="scenario-btn" data-action="bay" data-bay="1">Park in Bay 2</button><button class="scenario-btn" data-action="bay" data-bay="2">Park in Bay 3</button><button class="scenario-btn" data-action="two">Two occupied bays</button><button class="scenario-btn" data-action="one">One occupied bay</button><button class="scenario-btn" data-action="full">All bays occupied</button><button class="scenario-btn" data-action="unknown">Bay 2 sensor unknown</button><button class="scenario-btn" data-action="fourth">Fourth car attempts entry</button><button class="scenario-btn wide" data-action="leave">A car leaves</button><button class="scenario-btn wide" data-action="reset">Reset simulation</button>
+            </div><p class="caption" id="caption" aria-live="polite">The model is clear. Select a bay to begin an arrival sequence.</p><p class="sim-caution">Scenario controls pause while a vehicle moves. This scene has no connection to physical hardware.</p></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="data">
+      <div class="wrap">
+        <div class="section-head reveal"><div><span class="eyebrow">04 / How the signal reaches the screen</span><h2>A short path<br>from sensor to story.</h2></div><p>On the prototype, board readings travel over USB serial to a laptop bridge, then pass through a receiver and database before the browser presents the parking state.</p></div>
+        <div class="architecture reveal">
+          <div class="arch-diagram"><div class="arch-flow" aria-label="Illustrative data architecture">
+            <div class="arch-node"><span class="node-icon">Sensing</span><strong>Arduino UNO</strong><span>Reads sensors, controls gates</span></div><i class="arch-link"></i>
+            <div class="arch-node"><span class="node-icon">Transport</span><strong>USB serial</strong><span>Board to Windows laptop</span></div><i class="arch-link"></i>
+            <div class="arch-node"><span class="node-icon">Bridge</span><strong>Python</strong><span>Forwards readings</span></div><i class="arch-link"></i>
+            <div class="arch-node"><span class="node-icon">Receiver</span><strong>PHP</strong><span>Validates and accepts</span></div><i class="arch-link"></i>
+            <div class="arch-node"><span class="node-icon">Storage</span><strong>MySQL</strong><span>Parking records</span></div><i class="arch-link"></i>
+            <div class="arch-node"><span class="node-icon">Presentation</span><strong>Browser</strong><span>Current state and history</span></div>
+          </div><div class="arch-caption"><span>Illustrative signal path · no network or device activity on this page</span><strong>One-second recording was a target while the full chain is active.</strong></div></div>
+          <div class="arch-details">
+            <div class="arch-detail"><strong>Hardware sensing</strong><p>Three bay sensors and two lane sensors inform local occupancy and gate decisions.</p></div><div class="arch-detail"><strong>Data transport</strong><p>A Python bridge reads the Arduino's USB serial stream and forwards structured readings.</p></div><div class="arch-detail"><strong>Server-side saving</strong><p>A PHP receiver is the hand-off point for validating and saving records to MySQL.</p></div><div class="arch-detail"><strong>Stored history</strong><p>Records can support an occupancy-history view; saved history is distinct from current state.</p></div><div class="arch-detail"><strong>Browser presentation</strong><p>The dashboard surfaces available spaces, bay states and arrival/departure activity.</p></div><div class="arch-detail"><strong>Operational condition</strong><p>The one-second target depends on the board, bridge and server all being active; disconnection interrupts logging.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="contribution">
+      <div class="wrap">
+        <div class="contribution-layout reveal">
+          <article class="contribution-intro">
+            <span class="eyebrow">05 / My contribution</span>
+            <h2>My Contribution</h2>
+            <p class="contribution-subtitle">Connecting the physical prototype to its digital interface</p>
+            <p>This was a team project. My main responsibility was the connection between the physical parking system and the software: receiving signals from the Arduino, managing the database, and developing the live dashboard. I also contributed to the Arduino programming and testing needed to connect the hardware behaviour with the software.</p>
+            <div class="contribution-role"><span>Main responsibility · data connection</span><span>Additional contribution · Arduino and testing</span></div>
+          </article>
+          <div class="contribution-visual">
+            <span class="eyebrow">The software connection</span>
+            <p>Illustrative signal flow · this page is not connected to the original devices.</p>
+            <div class="signal-flow" role="list" aria-label="Arduino to Python bridge to PHP receiver to MySQL to dashboard">
+              <div class="flow-node additional" role="listitem"><small>Also contributed</small><strong>Arduino</strong></div><span class="flow-link" aria-hidden="true">→<i></i></span>
+              <div class="flow-node" role="listitem"><small>Main responsibility</small><strong>Python bridge</strong></div><span class="flow-link" aria-hidden="true">→<i></i></span>
+              <div class="flow-node" role="listitem"><small>Main responsibility</small><strong>PHP receiver</strong></div><span class="flow-link" aria-hidden="true">→<i></i></span>
+              <div class="flow-node" role="listitem"><small>Main responsibility</small><strong>MySQL</strong></div><span class="flow-link" aria-hidden="true">→<i></i></span>
+              <div class="flow-node" role="listitem"><small>Main responsibility</small><strong>Dashboard</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="contribution-areas reveal">
+          <article class="contribution-area" data-number="01"><h3>Receiving hardware signals</h3><p>I worked on receiving parking and gate information from the Arduino through USB serial communication and connecting those readings to the software through a Python bridge.</p></article>
+          <article class="contribution-area" data-number="02"><h3>Database and data saving</h3><p>I worked on the MySQL database and PHP data-saving process, connecting incoming readings to stored parking records. This supported the project’s requirement to record data at one-second intervals while the system was running.</p></article>
+          <article class="contribution-area" data-number="03"><h3>Live dashboard</h3><p>I developed the browser interface for viewing bay occupancy, available spaces and gate activity, and worked on connecting it to the incoming hardware data. I also worked on the historical occupancy graph.</p></article>
+          <article class="contribution-area" data-number="04"><h3>Arduino contribution</h3><p>Alongside my dashboard responsibilities, I contributed to Arduino code adjustments, telemetry integration and troubleshooting, helping connect sensor readings and gate behaviour with the software.</p></article>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="dashboard">
+      <div class="wrap">
+        <div class="section-head reveal"><div><span class="eyebrow">06 / Making the data visible</span><h2>Current state,<br>without pretending.</h2></div><p>My contribution focused on the dashboard and connecting it to hardware data. This dashboard preview and its responsive chart use simulated interactions, not recovered production records.</p></div>
+        <div class="dashboard-layout reveal">
+          <div class="dash-card"><div class="dash-head"><strong>Parking overview <span class="fine">/ illustrative interface</span></strong><span class="status-pill">Simulated data</span></div><div class="dash-stats"><div class="dash-stat"><span>Occupied</span><strong id="dashOccupied">0</strong></div><div class="dash-stat"><span>Available</span><strong id="dashAvailable">3</strong></div><div class="dash-stat"><span>Capacity</span><strong>3 bays</strong></div></div><div class="dashboard-bays" id="dashboardBays"><div class="dashboard-bay"><strong>Bay 01</strong><span>Available</span></div><div class="dashboard-bay"><strong>Bay 02</strong><span>Available</span></div><div class="dashboard-bay"><strong>Bay 03</strong><span>Available</span></div></div><div class="activity-lines"><span><b>Entrance activity</b><time id="entranceActivity">No simulated arrival yet</time></span><span><b>Exit activity</b><time id="exitActivity">No simulated departure yet</time></span><span><b>Data freshness</b><time>Illustrative · not hardware-connected</time></span></div></div>
+          <div class="chart-card"><div class="chart-title"><div><strong>Occupancy history</strong><div class="fine">Bounded, simulated example</div></div><span>Illustrative</span></div><div class="chart-wrap"><canvas id="historyChart" aria-label="Illustrative simulated occupancy history chart" role="img"></canvas></div><div class="chart-foot"><span>Earlier</span><span>Local simulation time →</span><span>Now</span></div><p class="data-note"><strong>Illustrative occupancy history — simulated data.</strong> It updates with each scenario and keeps a rolling window. The original historical graph display is awaiting final verification.</p></div>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="evidence">
+      <div class="wrap">
+        <div class="section-head reveal"><div><span class="eyebrow">07 / Testing &amp; lessons</span><h2>What we know.<br>What remains open.</h2></div><p>We separate reported working behaviour from evidence that still needs to be collected. The interactive page is a model of intended logic—not a test report.</p></div>
+        <div class="evidence-grid reveal">
+          <article class="evidence-card"><h3>Reported working in the project</h3><ul class="evidence-list"><li>Hardware sensing and live-data operation were reported working.</li><li>The final controller is Arduino UNO; the LCD was removed from the final build.</li><li>My assigned contribution was the dashboard and its connection to hardware data.</li></ul></article>
+          <article class="evidence-card pending"><h3>Awaiting final evidence</h3><ul class="evidence-list"><li>Confirmation that saved occupancy history renders end-to-end in the final dashboard.</li><li>Repeatable test records for full-capacity denial and independent exit behaviour.</li><li>Photos, demo footage and measured results have not been supplied here.</li></ul></article>
+        </div>
+        <div class="lesson-row reveal"><div class="lesson"><span class="num">LESSON 01</span><strong>Serial ports are shared resources.</strong><p>One process needs to own the board connection; a second reader can make the data path appear silent.</p></div><div class="lesson"><span class="num">LESSON 02</span><strong>A web UI is another system boundary.</strong><p>Hardware readings need a bridge, a receiver and clear handling before they become browser state.</p></div><div class="lesson"><span class="num">LESSON 03</span><strong>Now is not the same as history.</strong><p>A live occupancy value can look correct while saving, timestamps or historical rendering still need checking.</p></div></div>
+      </div>
+    </section>
+    <section class="section" id="media">
+      <div class="wrap">
+        <div class="section-head reveal"><div><span class="eyebrow">08 / Explore the evidence</span><h2>Artifacts to add<br>when they're ready.</h2></div><p>These deliberate placeholders make room for source evidence without implying that photographs, CAD exports or test footage were provided.</p></div>
+        <div class="media-grid reveal">
+          <article class="media-card"><div class="media-placeholder" data-asset="cad"><div class="media-content"><div class="placeholder-symbol">CAD</div><strong>Design drawing</strong><p>Exported CAD view belongs here.</p><span class="tag">Pending asset</span></div></div><div class="media-info"><strong>CAD design</strong><p>Procedural scene is not an accurate CAD preview.</p></div></article>
+          <article class="media-card"><div class="media-placeholder" data-asset="gates"><div class="media-content"><div class="placeholder-symbol">↗</div><strong>Entrance &amp; exit gates</strong><p>Show both servo-operated barriers.</p><span class="tag">Pending asset</span></div></div><div class="media-info"><strong>Gate mechanisms</strong><p>Two gates; exit remains independent at capacity.</p></div></article>
+          <article class="media-card"><div class="media-placeholder video-placeholder" data-video="complete"><div class="media-content"><div class="play-glyph">▶</div><strong>Complete system demo</strong><p>Video to be added</p><span class="tag">No file supplied</span></div></div><div class="media-info"><strong>Complete system</strong><p>Inline player activates when a local video is mapped.</p></div></article>
+          <article class="media-card"><div class="media-placeholder video-placeholder" data-video="denied"><div class="media-content"><div class="play-glyph">▶</div><strong>Entry denied when full</strong><p>Video to be added</p><span class="tag">No file supplied</span></div></div><div class="media-info"><strong>Full-capacity case</strong><p>Show a safe stop and independent departure.</p></div></article>
+          <article class="media-card"><div class="media-placeholder video-placeholder" data-video="journey"><div class="media-content"><div class="play-glyph">▶</div><strong>Parking &amp; departure</strong><p>Video to be added</p><span class="tag">No file supplied</span></div></div><div class="media-info"><strong>Vehicle sequence</strong><p>Arrival, bay assignment and exit sequence.</p></div></article>
+          <article class="media-card"><div class="media-placeholder" data-asset="dashboard"><div class="media-content"><div class="placeholder-symbol">UI</div><strong>Dashboard screenshot</strong><p>Place a real screen capture here.</p><span class="tag">Pending asset</span></div></div><div class="media-info"><strong>Browser view</strong><p>This page's dashboard is an illustrative example.</p></div></article>
+          <article class="media-card"><div class="media-placeholder" data-asset="wiring"><div class="media-content"><div class="placeholder-symbol">I/O</div><strong>Circuit &amp; wiring</strong><p>Place a labelled wiring photograph here.</p><span class="tag">Pending asset</span></div></div><div class="media-info"><strong>Electronics detail</strong><p>UNO, sensor placement, LEDs and servo wiring.</p></div></article>
+        </div>
+        <div class="resources reveal"><div class="resource-head"><div><span class="eyebrow">Project resources</span><h3>Downloads, when supplied.</h3></div><p class="fine">Every action stays disabled until a real file is mapped. No invented file sizes.</p></div><div class="resource-grid" id="resourceGrid"></div></div>
+      </div>
+    </section>
+    <section class="closing">
+      <div class="wrap"><div class="closing-box reveal"><div><span class="eyebrow">From small model to system thinking</span><h2>Automation needs<br>a visible state.</h2><p>This project brought together physical sensing, access decisions and a browser view. My dashboard and data-integration work sat at the point where a hardware event needed to become something a person could understand—and trust enough to investigate.</p></div><div class="closing-actions"><a class="btn btn-main" id="footerBack" href="../../index.html#projects">Back to portfolio <span aria-hidden="true">↗</span></a><a class="btn btn-line" href="mailto:lgrpenuka@gmail.com">Get in touch <span aria-hidden="true">↗</span></a></div></div></div>
+    </section>
+  </main>
+  <footer class="footer"><div class="wrap footer-inner"><span>Smart Car Park · University engineering prototype</span><span>Simulation and illustrative data are labelled throughout.</span></div></footer>
+  <div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-label="Project demonstration video"><div class="modal-panel"><button class="modal-close" id="modalClose" type="button">Close ×</button><div id="modalMedia"></div><div class="modal-title" id="modalTitle"></div></div></div>
+  <script type="module">
+    const ASSETS=window.PROJECT_ASSETS;
+    const resourceDefinitions=[
+      ["freecad","FCStd","FreeCAD source model"],["step","STEP","Neutral CAD model export"],["stl","STL","3D-printing mesh export"],["arduino","INO","Arduino sketch"],["sql","SQL","Database schema"],["php","PHP","Receiver source"],["python","PY","Serial bridge"],["dashboard","ZIP","Dashboard source archive"],["report","PDF","Project report"],["tests","DOC","Test-results document"]
+    ];
+    const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+    $("#backLink").href=ASSETS.portfolioUrl;$("#footerBack").href=ASSETS.portfolioUrl;
+    const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    $("#resourceGrid").innerHTML=resourceDefinitions.map(([key,type,name])=>{const file=ASSETS.downloads[key];const safe=file?esc(file):"";return `<div class="resource"><div class="resource-name"><span class="filetype">${type}</span><span><strong>${name}</strong><small>${file?"File ready":"To be added"}</small></span></div>${file?`<a class="resource-download" href="${safe}" download>Download</a>`:`<button type="button" disabled>Unavailable</button>`}</div>`}).join("");
+    // Resolve mapped photos only; null entries remain designed placeholders and make no requests.
+    $$("[data-asset]").forEach(el=>{const src=ASSETS.images[el.dataset.asset];if(src){el.style.backgroundImage=`linear-gradient(0deg,rgba(23,24,23,.45),rgba(23,24,23,.05)),url("${src}")`;el.style.backgroundSize="cover";el.style.backgroundPosition="center";const content=el.querySelector(".media-content");if(content)content.innerHTML='<span class="tag">Project image</span>';}});
+    const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const state={occupied:[false,false,false],departingBay:-1,busy:false,entryOpen:false,exitOpen:false,caption:"The model is clear. Select a bay to begin an arrival sequence.",lastEntry:"No simulated arrival yet",lastExit:"No simulated departure yet",pause:false};
+    let scenes=[], history=[], startedAt=Date.now(), actions=0;
+    function setCaption(text){state.caption=text;$("#caption").textContent=text}
+    function occupancy(){return state.occupied.filter(value=>value===true).length}
+    function availableBays(){return state.occupied.filter(value=>value===false).length}
+    function unknownBays(){return state.occupied.filter(value=>value===null).length}
+    function refresh(){
+      const n=occupancy(),pct=Math.round(n/3*100),free=availableBays(),unknown=unknownBays(),full=n===3;
+      $("#count").textContent=n;$("#percentage").textContent=pct;$("#occupancyFill").style.width=pct+"%";
+      $("#heroCount").textContent=`${n} / 3 occupied`;$("#heroPercent").textContent=pct+"%";$("#heroGate").textContent=state.entryOpen?"Entry gate open":"Entry gate closed";
+      $("#bayStates").innerHTML=state.occupied.map((v,i)=>`<div class="bay-state ${v===true?"occupied":v===null?"unknown":""}"><i></i>Bay ${i+1}<br>${v===true?"Occupied":v===false?"Available":"Sensor unknown"}</div>`).join("");
+      $("#entryState").textContent=state.entryOpen?"Open":"Closed";$("#entryState").classList.toggle("closed",!state.entryOpen);
+      $("#exitState").textContent=state.exitOpen?"Open":"Closed";$("#exitState").classList.toggle("closed",!state.exitOpen);
+      $("#dashOccupied").textContent=n;$("#dashAvailable").textContent=free;
+      $("#dashboardBays").innerHTML=state.occupied.map((v,i)=>`<div class="dashboard-bay ${v===true?"is-full":v===null?"is-unknown":""}"><strong>Bay 0${i+1}</strong><span>${v===true?"Occupied":v===false?"Available":"Sensor unknown"}</span></div>`).join("");
+      const unknownNames=state.occupied.map((v,i)=>v===null?`Bay ${i+1}`:null).filter(Boolean);
+      $("#unknownNote").hidden=unknown===0;$("#unknownNote").textContent=unknown?`${unknownNames.join(" and ")} sensor ${unknown===1?"is":"readings are"} unknown. Unknown bays are not counted as available; confirm the sensor before admitting a vehicle.`:"";
+      const warning=$("#capacityWarning");warning.hidden=free>0;warning.classList.toggle("uncertain",!full);warning.querySelector("span").textContent=full?"Parking full · Entry stays closed · Exit remains available":"Availability uncertain · No confirmed free bay · Entry remains closed";
+      $("#entranceActivity").textContent=state.lastEntry;$("#exitActivity").textContent=state.lastExit;
+      $$("[data-action='bay']").forEach(b=>b.disabled=state.busy||state.occupied[+b.dataset.bay]!==false);
+      $$("[data-action='leave']").forEach(b=>b.disabled=state.busy||n===0);
+      $$("[data-action='fourth']").forEach(b=>b.disabled=state.busy);
+      $$("[data-action='empty'],[data-action='one'],[data-action='two'],[data-action='full'],[data-action='unknown'],[data-action='reset']").forEach(b=>b.disabled=state.busy);
+      $("#heroReset").disabled=state.busy;
+      scenes.forEach(s=>s.update());
+    }
+    function timeLabel(){const d=new Date();return d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
+    function recordHistory(){history.push({t:timeLabel(),n:occupancy(),sec:Math.round((Date.now()-startedAt)/1000)});if(history.length>26)history.shift();drawChart()}
+    function drawChart(){
+      const canvas=$("#historyChart"),ctx=canvas.getContext("2d");if(!ctx)return;
+      const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.round(r.width*dpr));canvas.height=Math.max(1,Math.round(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0);
+      const w=r.width,h=r.height,p={l:26,r:7,t:13,b:23},cw=w-p.l-p.r,ch=h-p.t-p.b;
+      ctx.clearRect(0,0,w,h);ctx.font="10px Outfit, sans-serif";ctx.lineWidth=1;
+      for(let i=0;i<=3;i++){const y=p.t+ch-(i/3)*ch;ctx.strokeStyle="rgba(235,225,206,.1)";ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(w-p.r,y);ctx.stroke();ctx.fillStyle="#777970";ctx.textAlign="right";ctx.fillText(String(i),p.l-8,y+3)}
+      const points=history.length?history:[{n:0,t:""},{n:0,t:""}],step=cw/Math.max(1,points.length-1);
+      const coords=points.map((v,i)=>({x:p.l+step*i,y:p.t+ch-(v.n/3)*ch}));
+      if(coords.length){const grd=ctx.createLinearGradient(0,p.t,0,h);grd.addColorStop(0,"rgba(220,145,104,.23)");grd.addColorStop(1,"rgba(220,145,104,0)");ctx.beginPath();ctx.moveTo(coords[0].x,p.t+ch);coords.forEach(q=>ctx.lineTo(q.x,q.y));ctx.lineTo(coords.at(-1).x,p.t+ch);ctx.closePath();ctx.fillStyle=grd;ctx.fill();
+        ctx.beginPath();coords.forEach((q,i)=>i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y));ctx.strokeStyle="#dc9168";ctx.lineWidth=2;ctx.stroke();
+        coords.forEach((q,i)=>{if(i===coords.length-1){ctx.beginPath();ctx.arc(q.x,q.y,3.2,0,Math.PI*2);ctx.fillStyle="#f2b28b";ctx.fill()}});
+      }
+      ctx.textAlign="left";ctx.fillStyle="#777970";ctx.fillText(points[0].t||"start",p.l,h-4);ctx.textAlign="right";ctx.fillText(points.at(-1).t||"now",w-p.r,h-4);
+    }
+    const colors=["#c9825d","#7899a1","#d8aa65"];
+    // +Z is the front/gate boundary; -Z is the rear wall. Left/right are from outside looking in.
+    // The existing left-entry/right-exit assignment is kept here so it can be swapped in one place.
+    const MODEL_CONFIG={
+      frontZ:4.05,rearZ:-4.04,bayCenters:[-2.65,0,2.65],bayZ:-1.85,bayWidth:2.4,bayDepth:3.6,
+      gates:{
+        entry:{side:"left",laneX:-2.35,postX:-.82,sensorX:-1.15,sensorZ:4.62,sensorFace:1,armDirection:-1,stopZ:5.2},
+        exit:{side:"right",laneX:2.35,postX:.82,sensorX:1.15,sensorZ:3.48,sensorFace:-1,armDirection:1,stopZ:3.05}
+      }
+    };
+    function makeThree(canvas,THREE){
+      let renderer,scene,camera,raf=0,disposed=false,drag=null,inViewport=true,manuallyPaused=false;
+      const root=new THREE.Group();scene=new THREE.Scene();scene.background=new THREE.Color("#282c29");scene.fog=new THREE.Fog("#282c29",19,38);
+      camera=new THREE.PerspectiveCamera(37,1,.1,100);camera.position.set(7.4,10.5,14.7);camera.lookAt(0,.28,.15);
+      try{renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio||1,canvas.id==="heroScene"?1.5:1.75));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;}catch(e){throw e}
+      scene.add(root);scene.add(new THREE.HemisphereLight("#e0d8c9","#30332f",2.05));
+      const sun=new THREE.DirectionalLight("#ffe3c3",3.1);sun.position.set(-5,12,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
+      const mat=(c,rough=.72)=>new THREE.MeshStandardMaterial({color:c,roughness:rough});
+      const ground=new THREE.Mesh(new THREE.PlaneGeometry(22,22),mat("#343833"));ground.rotation.x=-Math.PI/2;ground.position.y=-.04;ground.receiveShadow=true;root.add(ground);
+      const grid=new THREE.GridHelper(20,20,"#565b53","#40443f");grid.position.y=-.025;root.add(grid);
+      function box(w,h,d,m,x,y,z,parent=root){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
+      const concrete=mat("#77796f"),lineMat=mat("#d7ccae"),asphalt=mat("#292c29"),dark=mat("#171a18"),ice=mat("#a9c9d4"),copper=mat("#dc9168");
+      const {frontZ,rearZ,bayCenters,bayZ,bayWidth,bayDepth,gates}=MODEL_CONFIG;
+      box(8.3,.13,8.75,asphalt,0,.02,0);
+      // Three bays sit against the rear wall; their open ends face the broad front manoeuvring apron.
+      const carMeshes=[],parkingSignals=[];
+      function makeUltrasonicSensor(x,y,z,faceZ=1){
+        const g=new THREE.Group();box(.42,.34,.2,dark,0,0,0,g);box(.34,.25,.035,ice,0,0,.11,g);
+        const transducerMat=mat("#cad9da",.32);
+        for(const dx of [-.095,.095]){const disc=new THREE.Mesh(new THREE.CylinderGeometry(.065,.065,.035,18),transducerMat);disc.rotation.x=Math.PI/2;disc.position.set(dx,0,.14);g.add(disc)}
+        g.position.set(x,y,z);g.rotation.y=faceZ<0?Math.PI:0;root.add(g);return g;
+      }
+      for(let i=0;i<3;i++){
+        const x=bayCenters[i],back=bayZ-bayDepth/2,open=bayZ+bayDepth/2;
+        box(bayWidth,.035,bayDepth,mat("#373b36"),x,.105,bayZ);
+        [-bayWidth/2,bayWidth/2].forEach(dx=>box(.035,.018,bayDepth,lineMat,x+dx,.13,bayZ));
+        box(bayWidth,.02,.035,lineMat,x,.13,back);box(bayWidth,.02,.035,lineMat,x,.13,open);
+        // Rear-wall panels carry one red (occupied) and one green (available) indicator per bay.
+        box(.68,.32,.13,dark,x,1.08,rearZ+.2);
+        const greenMat=mat("#3a5140",.38),redMat=mat("#513431",.38);
+        const green=new THREE.Mesh(new THREE.SphereGeometry(.075,16,12),greenMat),red=new THREE.Mesh(new THREE.SphereGeometry(.075,16,12),redMat);
+        green.position.set(x-.13,1.08,rearZ+.29);red.position.set(x+.13,1.08,rearZ+.29);root.add(green,red);parkingSignals.push({green,red});
+        // One paired-transducer ultrasonic sensor faces forward into the interior of each bay.
+        makeUltrasonicSensor(x,.62,rearZ+.82,1);
+        const car=new THREE.Group();const body=box(.95,.38,1.78,mat(colors[i]),0,.34,0,car);body.castShadow=true;
+        box(.7,.3,.82,mat("#bac5c1",.4),0,.62,-.08,car);box(.7,.12,.78,mat("#43514f",.35),0,.78,-.08,car);
+        for(const wx of [-.52,.52])for(const wz of [-.56,.56]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.14,.14,.1,12),mat("#171918"));wheel.rotation.z=Math.PI/2;wheel.position.set(wx,.19,wz);car.add(wheel)}
+        car.position.set(x,.12,bayZ);car.visible=false;root.add(car);carMeshes.push({group:car,bay:i});
+        box(.56,.035,.08,copper,x,.16,open-.18);
+      }
+      // Side and rear walls; the front edge is deliberately open only at its two gate lanes.
+      box(8.18,1.58,.22,concrete,0,.79,rearZ);
+      box(.2,.42,8.2,concrete,-4.05,.21,0);box(.2,.42,8.2,concrete,4.05,.21,0);
+      box(.32,.28,.42,concrete,-3.9,.14,frontZ);box(.32,.28,.42,concrete,3.9,.14,frontZ);
+      // The central rectangular structure separates both openings; gate posts sit directly beside it.
+      box(1.42,1.18,.52,concrete,0,.59,frontZ);
+      function createGate(config,label){
+        const {postX,armDirection}=config,z=frontZ;
+        box(.5,.15,.58,concrete,postX,.12,z);
+        box(.24,.76,.24,copper,postX,.53,z);
+        const pivot=new THREE.Group();pivot.position.set(postX,.92,z);root.add(pivot);
+        const armLength=2.72;
+        box(armLength,.09,.12,mat("#e6dfcf"),armDirection*armLength/2,0,0,pivot);
+        for(let j=0;j<6;j++)box(.17,.095,.13,j%2?mat("#333633"):copper,armDirection*(.2+j*.43),.006,.005,pivot);
+        const lightMat=mat("#dc806e",.35),light=new THREE.Mesh(new THREE.SphereGeometry(.09,14,12),lightMat);light.position.set(postX,1.03,z-.2);root.add(light);
+        return {pivot,light,label,armDirection};
+      }
+      const entryGate=createGate(gates.entry,"Entry"),exitGate=createGate(gates.exit,"Exit");
+      // Five sensors total: three bay-facing, one outside the entry barrier, and one inside the exit lane.
+      makeUltrasonicSensor(gates.entry.sensorX,.62,gates.entry.sensorZ,gates.entry.sensorFace);
+      makeUltrasonicSensor(gates.exit.sensorX,.62,gates.exit.sensorZ,gates.exit.sensorFace);
+      // Lane markings and the same-front-edge gate layout, viewed from outside looking in.
+      for(let z=1;z<frontZ-.15;z+=.55){box(.04,.018,.22,lineMat,gates.entry.laneX,.12,z);box(.04,.018,.22,lineMat,gates.exit.laneX,.12,z)}
+      const cars={};let moving=[];let orbit={theta:.42,phi:.84,dist:19};let target=new THREE.Vector3(0,.28,.2);
+      function placeCar(carId,pos,angle=0){if(cars[carId]){cars[carId].position.copy(pos);cars[carId].rotation.y=angle;return cars[carId]}const g=new THREE.Group();const color=carId==="denied"?"#a95d53":colors[carId==="arrival"?0:carId==="departure"?2:1];const body=box(.95,.42,1.78,mat(color),0,.34,0,g);box(.72,.32,.84,mat("#9facaa",.38),0,.68,-.08,g);box(.7,.1,.8,mat("#394744",.35),0,.88,-.08,g);for(const wx of [-.52,.52])for(const wz of [-.55,.55]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.14,.14,.1,12),mat("#151716"));wheel.rotation.z=Math.PI/2;wheel.position.set(wx,.2,wz);g.add(wheel)}g.position.copy(pos);g.rotation.y=angle;g.castShadow=true;root.add(g);cars[carId]=g;return g}
+      function clearTransient(){Object.keys(cars).forEach(k=>{root.remove(cars[k]);delete cars[k]});moving=[]}
+      function setIndicator(mesh,on,onColor,offColor){mesh.material.color.set(on?onColor:offColor);mesh.material.emissive.set(on?onColor:"#000000");mesh.material.emissiveIntensity=on ? .55 : 0}
+      function setOccupancyVisual(){carMeshes.forEach((m,i)=>{const status=state.occupied[i],signal=parkingSignals[i];m.group.visible=status===true&&state.departingBay!==i;setIndicator(signal.green,status===false,"#8abd83","#29362c");setIndicator(signal.red,status===true,"#dc6258","#382c2b")})}
+      function animateCar(id,segments){
+        const prepared=segments.map(segment=>segment.hold?segment:{...segment,curve:new THREE.CatmullRomCurve3(segment.points.map(p=>new THREE.Vector3(...p)),false,"catmullrom",.2)});
+        const first=prepared.find(segment=>!segment.hold);if(!first)return;
+        if(reduced){if(id==="denied"){const stop=prepared.find(segment=>segment.hold),before=prepared[prepared.indexOf(stop)-1];const p=before.curve.getPoint(1);placeCar(id,p,0)}return}
+        const car=placeCar(id,new THREE.Vector3(...first.points[0]));moving.push({id,car,segments:prepared,index:0,start:performance.now()});
+      }
+      function syncGate(){entryGate.open=state.entryOpen?1:0;exitGate.open=state.exitOpen?1:0;entryGate.light.material.color.set(state.entryOpen?"#8abd83":"#dc806e");exitGate.light.material.color.set(state.exitOpen?"#8abd83":"#dc806e")}
+      function update(){
+        setOccupancyVisual();syncGate();if(reduced||manuallyPaused)renderer.render(scene,camera);
+      }
+      function resize(){const b=canvas.getBoundingClientRect();if(!b.width||!b.height)return;renderer.setSize(b.width,b.height,false);camera.aspect=b.width/b.height;camera.updateProjectionMatrix()}
+      function frame(now){
+        if(disposed||document.hidden||manuallyPaused||!inViewport){raf=0;return}raf=requestAnimationFrame(frame);
+        const width=canvas.clientWidth,height=canvas.clientHeight;if(!width||!height)return;
+        if(canvas._lastW!==width||canvas._lastH!==height){canvas._lastW=width;canvas._lastH=height;resize()}
+        const alive=[];for(const m of moving){const segment=m.segments[m.index],t=Math.min(1,(now-m.start)/segment.duration);if(!segment.hold){const p=segment.curve.getPoint(t),tan=segment.curve.getTangent(t);m.car.position.copy(p);m.car.rotation.y=Math.atan2(tan.x,tan.z)+(segment.reverse?Math.PI:0)}if(t>=1){m.index++;if(m.index>=m.segments.length){root.remove(m.car);delete cars[m.id];continue}m.start=now}alive.push(m)}moving=alive;
+        entryGate.pivot.rotation.z+=((state.entryOpen?entryGate.armDirection*1.18:0)-entryGate.pivot.rotation.z)*.08;
+        exitGate.pivot.rotation.z+=((state.exitOpen?exitGate.armDirection*1.18:0)-exitGate.pivot.rotation.z)*.08;
+        camera.position.set(target.x+orbit.dist*Math.sin(orbit.theta)*Math.sin(orbit.phi),target.y+orbit.dist*Math.cos(orbit.phi),target.z+orbit.dist*Math.cos(orbit.theta)*Math.sin(orbit.phi));camera.lookAt(target);
+        renderer.render(scene,camera);
+      }
+      const onDown=e=>{drag={x:e.clientX,y:e.clientY,theta:orbit.theta,phi:orbit.phi};canvas.setPointerCapture(e.pointerId)};
+      const onMove=e=>{if(!drag)return;orbit.theta=drag.theta-(e.clientX-drag.x)*.006;orbit.phi=Math.min(1.35,Math.max(.48,drag.phi+(e.clientY-drag.y)*.005))};
+      const onUp=()=>drag=null;const onWheel=e=>{e.preventDefault();orbit.dist=Math.max(12,Math.min(26,orbit.dist+e.deltaY*.015))};
+      canvas.addEventListener("pointerdown",onDown);canvas.addEventListener("pointermove",onMove);canvas.addEventListener("pointerup",onUp);canvas.addEventListener("pointercancel",onUp);canvas.addEventListener("wheel",onWheel,{passive:false});
+      const start=()=>{if(!disposed&&inViewport&&!document.hidden&&!manuallyPaused&&!reduced&&!raf)raf=requestAnimationFrame(frame)};
+      const observer=new IntersectionObserver(entries=>{inViewport=entries.some(x=>x.isIntersecting);if(inViewport)start();else{cancelAnimationFrame(raf);raf=0}});
+      observer.observe(canvas);
+      update();resize();if(reduced){renderer.render(scene,camera)}else start();
+      return {update,animateCar,clearTransient,observer,dispose(){disposed=true;cancelAnimationFrame(raf);observer.disconnect();renderer.dispose()},resetCamera(){orbit={theta:.42,phi:.84,dist:19};target.set(0,.28,.2)},setPaused(value){manuallyPaused=value;if(value){cancelAnimationFrame(raf);raf=0}else start()}};
+    }
+    // Matching interactive 2D plan for browsers where WebGL is unavailable.
+    function fallback(canvas){
+      let motion=[],frame=0,paused=false;
+      function drawCar(c,x,z,angle,color,scale,X,Y){
+        c.save();c.translate(X(x),Y(z));c.rotate(-angle);const w=.95*scale,d=1.78*scale;
+        c.fillStyle=color;c.beginPath();c.roundRect(-w/2,-d/2,w,d,Math.max(4,.2*scale));c.fill();
+        c.fillStyle="#9facaa";c.beginPath();c.roundRect(-w*.34,-d*.27,w*.68,d*.31,Math.max(3,.12*scale));c.fill();
+        c.restore();
+      }
+      function draw(){
+        const W=canvas.clientWidth,H=canvas.clientHeight;if(!W||!H)return;
+        const dpr=devicePixelRatio||1;if(canvas.width!==Math.round(W*dpr)||canvas.height!==Math.round(H*dpr)){canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr)}
+        const c=canvas.getContext("2d");c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle="#282c29";c.fillRect(0,0,W,H);
+        c.strokeStyle="#363b36";c.lineWidth=1;for(let x=0;x<W;x+=32){c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke()}for(let y=0;y<H;y+=32){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+        const scale=Math.max(13,Math.min((W-34)/10,(H-30)/12)),ox=W/2,oy=H*.38,X=x=>ox+x*scale,Y=z=>oy+z*scale;
+        const rect=(x,z,w,d,color)=>{c.fillStyle=color;c.fillRect(X(x-w/2),Y(z-d/2),w*scale,d*scale)};
+        const label=(text,x,z,color="#aaa89f",size=9)=>{c.fillStyle=color;c.font=`${size}px Outfit, sans-serif`;c.textAlign="center";c.fillText(text,X(x),Y(z))};
+        rect(0,0,8.3,8.75,"#292c29");
+        // Three side-by-side bays end at the rear wall and open toward one shared apron.
+        for(let i=0;i<3;i++){
+          const x=MODEL_CONFIG.bayCenters[i],bayZ=MODEL_CONFIG.bayZ,stateValue=state.occupied[i],back=bayZ-MODEL_CONFIG.bayDepth/2,open=bayZ+MODEL_CONFIG.bayDepth/2;
+          rect(x,bayZ,MODEL_CONFIG.bayWidth,MODEL_CONFIG.bayDepth,"#343833");
+          c.strokeStyle="#d7ccae";c.lineWidth=Math.max(1,.035*scale);c.strokeRect(X(x-MODEL_CONFIG.bayWidth/2),Y(back),MODEL_CONFIG.bayWidth*scale,MODEL_CONFIG.bayDepth*scale);
+          rect(x,MODEL_CONFIG.rearZ+.2,.68,.32,"#171a18");
+          const led=(dx,on,color,off)=>{c.beginPath();c.arc(X(x+dx),Y(MODEL_CONFIG.rearZ+.29),Math.max(2.5,.075*scale),0,Math.PI*2);c.fillStyle=on?color:off;c.fill()};
+          led(-.13,stateValue===false,"#8abd83","#29362c");led(.13,stateValue===true,"#dc6258","#382c2b");
+          rect(x,MODEL_CONFIG.rearZ+.82,.42,.34,"#a9c9d4");
+          for(const dx of [-.095,.095]){c.beginPath();c.arc(X(x+dx),Y(MODEL_CONFIG.rearZ+.82+.13),Math.max(2.5,.065*scale),0,Math.PI*2);c.fillStyle="#cad9da";c.fill()}
+          if(stateValue===true&&state.departingBay!==i)drawCar(c,x,bayZ,0,colors[i],scale,X,Y);
+          if(stateValue===null)label("? SENSOR UNKNOWN",x,bayZ,"#d8aa65",Math.max(8,9*scale/21));
+          label(`BAY 0${i+1}`,x,open-.22,"#d5c8ad",Math.max(8,9*scale/21));
+        }
+        // Rear and side walls, with no front wall crossing either opening.
+        rect(0,MODEL_CONFIG.rearZ,8.18,.22,"#77796f");rect(-4.05,0,.2,8.2,"#77796f");rect(4.05,0,.2,8.2,"#77796f");
+        rect(0,MODEL_CONFIG.frontZ,1.42,.52,"#77796f");
+        for(const gate of [MODEL_CONFIG.gates.entry,MODEL_CONFIG.gates.exit]){
+          rect(gate.postX,MODEL_CONFIG.frontZ,.24,.24,"#dc9168");
+          const open=gate===MODEL_CONFIG.gates.entry?state.entryOpen:state.exitOpen;
+          c.strokeStyle=open?"#8abd83":"#e6dfcf";c.lineWidth=Math.max(3,.1*scale);c.beginPath();c.moveTo(X(gate.postX),Y(MODEL_CONFIG.frontZ));c.lineTo(X(gate.postX+(open?0:gate.armDirection*2.72)),Y(MODEL_CONFIG.frontZ+(open ? .22 : 0)));c.stroke();
+          label(gate===MODEL_CONFIG.gates.entry?"ENTRY":"EXIT",gate.laneX,6.15,open?"#8abd83":"#aaa89f",Math.max(8,9*scale/21));
+          rect(gate.sensorX,gate.sensorZ,.42,.34,"#a9c9d4");
+          for(const dx of [-.095,.095]){c.beginPath();c.arc(X(gate.sensorX+dx),Y(gate.sensorZ+(gate.sensorFace>0 ? .11 : -.11)),Math.max(2.5,.065*scale),0,Math.PI*2);c.fillStyle="#cad9da";c.fill()}
+        }
+        label("REAR WALL",0,MODEL_CONFIG.rearZ-.34,"#aaa89f",Math.max(8,9*scale/21));
+        label("SHARED TURNING APRON",0,1.55,"#777970",Math.max(8,9*scale/21));
+        for(const car of motion)drawCar(c,car.x,car.z,car.angle,car.id==="denied"?"#a95d53":colors[car.id==="arrival"?0:car.id==="departure"?2:1],scale,X,Y);
+      }
+      function sample(points,t){
+        if(points.length<2)return points[0]||[0,.12,0];
+        const scaled=Math.max(0,Math.min(.999999,t))*(points.length-1),i=Math.floor(scaled),u=scaled-i;
+        const p0=points[Math.max(0,i-1)],p1=points[i],p2=points[i+1],p3=points[Math.min(points.length-1,i+2)];
+        const cat=(a,b,c,d)=>.5*((2*b)+(-a+c)*u+(2*a-5*b+4*c-d)*u*u+(-a+3*b-3*c+d)*u*u*u);
+        return [cat(p0[0],p1[0],p2[0],p3[0]),.12,cat(p0[2],p1[2],p2[2],p3[2])];
+      }
+      function tick(now){
+        frame=0;if(paused||!motion.length)return;
+        const alive=[];
+        for(const car of motion){const segment=car.segments[car.index],t=Math.min(1,(now-car.started)/segment.duration);
+          if(!segment.hold){const p=sample(segment.points,t),next=sample(segment.points,Math.min(1,t+.003));car.x=p[0];car.z=p[2];car.angle=Math.atan2(next[0]-p[0],next[2]-p[2])}
+          if(t>=1){car.index++;if(car.index>=car.segments.length)continue;car.started=now}
+          alive.push(car);
+        }
+        motion=alive;draw();if(motion.length)frame=requestAnimationFrame(tick);
+      }
+      function animateCar(id,segments){
+        motion=motion.filter(car=>car.id!==id);
+        const first=segments.find(segment=>!segment.hold);if(!first)return;
+        const car={id,segments,index:0,started:performance.now(),x:first.points[0][0],z:first.points[0][2],angle:0};
+        if(reduced){if(id==="denied"){const last=[...segments].reverse().find(segment=>!segment.hold);car.x=last.points.at(-1)[0];car.z=last.points.at(-1)[2];motion.push(car)}draw();return}
+        motion.push(car);if(!frame&&!paused)frame=requestAnimationFrame(tick);draw();
+      }
+      function clearTransient(){motion=[];cancelAnimationFrame(frame);frame=0;draw()}
+      draw();return {update:draw,animateCar,clearTransient,dispose(){cancelAnimationFrame(frame)},resetCamera(){},setPaused(value){paused=value;if(value){cancelAnimationFrame(frame);frame=0}else if(motion.length&&!frame)frame=requestAnimationFrame(tick)}};
+    }
+    // Probe WebGL once before creating renderers; static-hosted builds load a pinned Three.js module.
+    const probeCanvas=document.createElement("canvas");
+    let webglAvailable=false;
+    try{webglAvailable=!!(probeCanvas.getContext("webgl2")||probeCanvas.getContext("webgl"))}catch{}
+    if(!webglAvailable){scenes=[$("#heroScene"),$("#mainScene")].map(fallback)}
+    else{
+      try{
+        const THREE=await import("https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js");
+        function buildScene(canvas){try{return makeThree(canvas,THREE)}catch(err){console.info("3D unavailable; using schematic fallback.");return fallback(canvas)}}
+        scenes=[buildScene($("#heroScene")),buildScene($("#mainScene"))];
+      }catch(err){console.info("Three.js unavailable; using the accessible 2D fallback.");scenes=[$("#heroScene"),$("#mainScene")].map(fallback)}
+    }
+    const [heroScene,mainScene]=scenes;
+    function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+    function arrivalRoute(destination){
+      const cfg=MODEL_CONFIG.gates.entry,bayX=MODEL_CONFIG.bayCenters[destination],turnX=bayX<0?-1.05:1.05;
+      return [
+        {points:[[cfg.laneX,.12,6.2],[cfg.laneX,.12,5.15],[cfg.laneX,.12,3.15],[cfg.laneX,.12,2.55]],duration:reduced?10:2500},
+        {points:[[cfg.laneX,.12,2.55],[cfg.laneX,.12,1.85],[turnX,.12,1.15],[bayX,.12,1.85],[bayX,.12,2.55]],duration:reduced?10:2100},
+        {points:[[bayX,.12,2.55],[bayX,.12,.45],[bayX,.12,MODEL_CONFIG.bayZ]],duration:reduced?10:1800,reverse:true}
+      ];
+    }
+    function departureRoute(bay){
+      const bayX=MODEL_CONFIG.bayCenters[bay],exit=MODEL_CONFIG.gates.exit;
+      return [
+        {points:[[bayX,.12,MODEL_CONFIG.bayZ],[bayX,.12,-.1],[bayX,.12,1],[1.05,.12,1.75],[exit.laneX,.12,2.55],[exit.laneX,.12,exit.stopZ]],duration:reduced?10:2600},
+        {hold:true,duration:reduced?10:500},
+        {points:[[exit.laneX,.12,exit.stopZ],[exit.laneX,.12,4.3],[exit.laneX,.12,6.3]],duration:reduced?10:1500}
+      ];
+    }
+    function showRoute(id,segments){scenes.forEach(scene=>scene.animateCar?.(id,segments));scenes.forEach(scene=>scene.update())}
+    async function run(action,bay){
+      if(state.busy)return;
+      state.busy=true;refresh();
+      const destination=bay,full=occupancy()===3,free=availableBays();
+      if(["reset","empty","one","two","full","unknown"].includes(action)){
+        state.occupied=action==="reset"||action==="empty"?[false,false,false]:action==="one"?[true,false,false]:action==="two"?[true,true,false]:action==="full"?[true,true,true]:action==="unknown"?[true,null,true]:[false,false,false];
+        scenes.forEach(s=>s.clearTransient());state.departingBay=-1;state.entryOpen=false;state.exitOpen=false;
+        setCaption(action==="full"?"All three bays are occupied. The entry stays closed; the exit remains available.":action==="unknown"?"Bay 2 is sensor-unknown; Bays 1 and 3 are occupied. Entry stays closed because no bay is confirmed available.":action==="two"?"Two spaces are occupied. One arrival can still be admitted.":action==="one"?"One bay is occupied; two remain available.":action==="reset"?"Simulation reset. All bays are free and both gates are closed.":"All bays are free. Choose a bay for an arrival.");
+        state.busy=false;refresh();recordHistory();return;
+      }
+      if(action==="bay"){
+        if(state.occupied[destination]!==false){setCaption(state.occupied[destination]===null?`Bay ${destination+1} has an unknown sensor reading. It is not treated as available.`:`Bay ${destination+1} is already occupied. Choose a confirmed available bay.`);state.busy=false;refresh();return}
+        if(free===0){state.busy=false;setCaption(full?"Parking full. The entry barrier remains closed; the exit is still available.":"No bay is confirmed available. Entry stays closed until sensor status is confirmed.");refresh();return}
+        setCaption("Entry sensor detects an arriving vehicle outside the closed gate.");state.lastEntry=timeLabel()+" · arrival";state.entryOpen=true;refresh();await sleep(reduced?10:500);
+        showRoute("arrival",arrivalRoute(destination));
+        setCaption(`The entry gate rises. The car clears the barrier, turns through the shared apron, and reverses into Bay ${destination+1}.`);
+        await sleep(reduced?10:2500);state.entryOpen=false;refresh();
+        setCaption("The entry gate closes after the car clears the opening. The vehicle is turning toward its bay.");
+        await sleep(reduced?10:2100);await sleep(reduced?10:1800);
+        state.occupied[destination]=true;state.lastEntry=timeLabel()+" · Bay "+(destination+1);setCaption(`Bay ${destination+1} is occupied. The car is parked and the entry gate is closed.`);state.busy=false;refresh();recordHistory();return;
+      }
+      if(action==="fourth"){
+        if(free>0){setCaption("For this test, choose All bays occupied or Bay 2 sensor unknown first. The entry check requires no confirmed available bay.");state.busy=false;refresh();return}
+        const uncertain=unknownBays()>0,entry=MODEL_CONFIG.gates.entry;
+        setCaption(uncertain?"Entry remains closed: no bay is confirmed available, and at least one sensor is unknown.":"Entry sensor detects a fourth arrival. Capacity check confirms all bays are occupied.");
+        state.lastEntry=timeLabel()+" · denied";state.entryOpen=false;
+        showRoute("denied",[{points:[[entry.laneX,.12,6.2],[entry.laneX,.12,entry.stopZ]],duration:reduced?10:1100},{hold:true,duration:3600000}]);
+        await sleep(reduced?10:1200);state.busy=false;setCaption(uncertain?"Availability is uncertain. The fourth car stops outside the closed gate; unknown is not treated as free or full.":"Parking full. The fourth car stops outside the closed entry gate. The exit remains available independently.");refresh();recordHistory();return;
+      }
+      if(action==="leave"){
+        if(occupancy()===0){state.busy=false;setCaption("No occupied bay to leave. Park a car first.");refresh();return}
+        const leaving=state.occupied.lastIndexOf(true);state.departingBay=leaving;state.lastExit=timeLabel()+" · departure";setCaption(`Bay ${leaving+1} departure requested. The car moves through the shared apron toward the independent exit gate.`);refresh();
+        showRoute("departure",departureRoute(leaving));
+        await sleep(reduced?10:2600);state.exitOpen=true;refresh();setCaption("The exit gate rises as the departing car reaches the exit lane.");
+        await sleep(reduced?10:500);await sleep(reduced?10:1500);
+        state.occupied[leaving]=false;state.departingBay=-1;state.exitOpen=false;state.lastExit=timeLabel()+" · cleared";setCaption(`The car clears the exit opening and the gate closes. Bay ${leaving+1} is available again.`);state.busy=false;refresh();recordHistory();return;
+      }
+      state.busy=false;refresh();
+    }
+    $("#scenarioControls").addEventListener("click",e=>{const b=e.target.closest("button[data-action]");if(!b)return;run(b.dataset.action,b.dataset.bay===undefined?undefined:+b.dataset.bay)});
+    const hotspotNotes={bays:"01 · Bay sensing — three ultrasonic sensors track the bays; two LEDs per bay show status.",entry:"02 · Entry — an entrance sensor checks capacity before the servo barrier can rise.",exit:"03 · Exit — its own sensor and barrier let a car leave independently, even at full capacity."};
+    $$("[data-hotspot]").forEach(button=>button.addEventListener("click",()=>{$$("[data-hotspot]").forEach(item=>item.setAttribute("aria-pressed",String(item===button)));$("#hotspotDetail").textContent=hotspotNotes[button.dataset.hotspot]}));
+    [$("#heroReset")].forEach(b=>b.addEventListener("click",()=>run("reset")));
+    [$("#heroPause")].forEach(b=>b.addEventListener("click",()=>{state.pause=!state.pause;b.textContent=state.pause?"▶":"Ⅱ";b.setAttribute("aria-label",state.pause?"Resume scene motion":"Pause scene motion");scenes.forEach(s=>s.setPaused?.(state.pause))}));
+    document.addEventListener("visibilitychange",()=>scenes.forEach(s=>{if(s.setPaused)s.setPaused(document.hidden||state.pause)}));
+    function pauseWhenOffscreen(){/* Each WebGL renderer uses IntersectionObserver internally. */}
+    window.addEventListener("resize",()=>{drawChart();scenes.forEach(scene=>scene.update())},{passive:true});
+    refresh();recordHistory();setInterval(()=>{if(!document.hidden&&actions++%4===0)drawChart()},1000);
+    // Inline video modal is activated only for a configured, real local asset; null placeholders make no media requests.
+    const modal=$("#videoModal"),modalMedia=$("#modalMedia"),modalTitle=$("#modalTitle");let priorFocus=null;
+    const videoTitles={complete:"Complete system demonstration",denied:"Entry denied when full",journey:"Parking and departure sequence"};
+    $$("[data-video]").forEach(el=>{
+      const src=ASSETS.videos[el.dataset.video];if(!src)return;
+      el.classList.remove("video-placeholder");el.classList.add("real-media");el.tabIndex=0;el.setAttribute("role","button");el.setAttribute("aria-label",`Play ${videoTitles[el.dataset.video]||"project demonstration"}`);
+      const content=el.querySelector(".media-content");if(content)content.innerHTML=`<div class="play-glyph" aria-hidden="true">▶</div><strong>${videoTitles[el.dataset.video]}</strong><p>Play inline demonstration</p><span class="tag">Project video</span>`;
+      const openVideo=()=>{priorFocus=el;modalMedia.innerHTML="";const embed=String(src).match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]+)/);const vimeo=String(src).match(/vimeo\.com\/(?:video\/)?(\d+)/);
+        if(embed||vimeo){const frame=document.createElement("iframe");frame.src=embed?`https://www.youtube-nocookie.com/embed/${embed[1]}?playsinline=1`: `https://player.vimeo.com/video/${vimeo[1]}`;frame.title=videoTitles[el.dataset.video]||"Project demonstration";frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";frame.allowFullscreen=true;modalMedia.append(frame)}
+        else{const video=document.createElement("video");video.controls=true;video.playsInline=true;video.preload="metadata";if(ASSETS.images.prototype)video.poster=ASSETS.images.prototype;const source=document.createElement("source");source.src=src;source.type=/\.webm($|\?)/i.test(src)?"video/webm":"video/mp4";video.append(source);modalMedia.append(video)}
+        modalTitle.textContent=videoTitles[el.dataset.video];modal.classList.add("open");$("#modalClose").focus()};
+      el.addEventListener("click",openVideo);el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openVideo()}});
+    });
+    function closeModal(){const v=modal.querySelector("video");if(v){v.pause();v.removeAttribute("src");v.load()}modal.classList.remove("open");modalMedia.innerHTML="";if(priorFocus)priorFocus.focus()}
+    $("#modalClose").addEventListener("click",closeModal);modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&modal.classList.contains("open"))closeModal();if(e.key==="Tab"&&modal.classList.contains("open")){e.preventDefault();$("#modalClose").focus()}});
+    const topbar=$("#topbar");window.addEventListener("scroll",()=>topbar.classList.toggle("scrolled",scrollY>18),{passive:true});
+    if("IntersectionObserver"in window&&!reduced){const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in-view");observer.unobserve(e.target)}}),{threshold:.1});$$(".reveal").forEach(el=>observer.observe(el))}else $$(".reveal").forEach(el=>el.classList.add("in-view"));
+  </script>
+</body>
+</html>
